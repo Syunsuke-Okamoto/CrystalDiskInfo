@@ -862,6 +862,9 @@
     <None Include="res\001soundkenjin.opus" />
     <None Include=".gitattributes" />
     <None Include=".gitignore" />
+    <None Include="appveyor.yml">
+      <Filter>Source Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DiskInfo.rc">
@@ -876,5 +879,10 @@
     <ResourceCompile Include="Normal.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="CMakeLists.txt">
+      <Filter>Source Files</Filter>
+    </Text>
   </ItemGroup>
 </Project>

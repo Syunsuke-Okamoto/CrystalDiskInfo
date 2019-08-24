@@ -1,0 +1,60 @@
+version: '8.2.4-{build}'
+environment:
+  matrix:
+#    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
+#      GENERATOR: "Visual Studio 16 2019"
+#      PLATFORMTOOLSET: "v142"
+    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+      GENERATOR: "Visual Studio 15 2017"
+      PLATFORMTOOLSET: "v141"
+    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
+      GENERATOR: "Visual Studio 14 2015"
+      PLATFORMTOOLSET: "v140"
+    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2013
+      GENERATOR: "Visual Studio 13 2013"
+      PLATFORMTOOLSET: "v130"
+
+platform:
+- Win32
+- x64
+
+configuration:
+- Debug
+- Release
+- ReleaseShizuku
+- ReleaseKureiKei
+
+init:
+- ps: Set-WinSystemLocale ja-JP
+- ps: Start-Sleep -s 10
+- ps: Restart-Computer
+
+#install:
+#- cd C:\Tools\vcpkg
+#- git pull
+#- .\bootstrap-vcpkg.bat
+#- cd %APPVEYOR_BUILD_FOLDER%
+#- vcpkg install atlmfc:x64-windows
+#- vcpkg install atlmfc:x86-windows
+
+before_build:
+- md build
+- cd build
+- cmake --version
+- echo "%GENERATOR%" "%PLATFORM%" "%PLATFORMTOOLSET%" "%CONFIGURATION%"
+- cmake -G "%GENERATOR%" \
+  -A "%PLATFORM%" \
+  -T "%PLATFORMTOOLSET%" \
+  -DCMAKE_CONFIGURATION_TYPES="%CONFIGURATION%" \
+  -DCMAKE_VS_WINDOWS_TARGET_PLATFORM_VERSION=10.0.16299.0 \
+  -DCMAKE_MFC_FLAG=1 \
+  ..
+
+build_script:
+  - cmake --build . --config %CONFIGURATION%
+#  - set MSBuildLogger="C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
+#  - set MSBuildOptions=/v:m /m /p:BuildInParallel=true /p:Configuration=%CONFIGURATION% /p:platform=%PLATFORM% /p:PlatformToolset=%PLATFORMTOOLSET% /logger:%MSBuildLogger% 
+#  - msbuild %MSBuildOptions% DiskInfo.sln
+
+matrix:
+  fast_finish: true 
