@@ -5,6 +5,7 @@ project( DiskInfo )
 
 add_definitions(-D_AFXDLL)
 set(CMAKE_MFC_FLAG 1) # 1:static MFC DLL, 2: shard MFC DLL
+set(CMAKE_ANSI_CXXFLAGS)
 add_definitions(-D_MBCS_)
 
 file(GLOB MY_SOURCE *.h *.cpp)
