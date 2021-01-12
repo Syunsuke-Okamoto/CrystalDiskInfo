@@ -729,7 +729,8 @@ void CDiskInfoDlg::UpdateToolTip()
 			CString diskStatus;
 			CString csTemperature; // Temperature (℉ / ℃)
 			CString csDiskSize; // Disk Size + SI Prefix(M, G, T)
-			
+			CString csLife;	// Life 
+
 			int iTemperature = 0;
 			double	dblPrintDiskSize = 0.0;
 			DWORD dwSIvalue = 1; // SI Prefix values ( 1, 1000 , 1000000 , 1000000000, ... ) 
@@ -748,7 +749,7 @@ void CDiskInfoDlg::UpdateToolTip()
 				if( j > 0 ){	
 					if(m_Ata.vars[i].TotalDiskSize >= dwSIvalue ){
 						csDiskSize.Format(_T("%.1lf %cB"),
-							(double)(m_Ata.vars[i].TotalDiskSize / dwSIvalue),	// Disk Value
+							(double)(m_Ata.vars[i].TotalDiskSize) / (double)(dwSIvalue),	// Disk Value
 							tcSIprefix[j]	// SI prefix
 						);
 						break;
@@ -773,12 +774,21 @@ void CDiskInfoDlg::UpdateToolTip()
 				csTemperature.Empty();
 			}
 
+			// Life Parts
+			if (m_Ata.vars[i].Life >= 0) {
+				csLife.Format(_T("(%d %%)"), m_Ata.vars[i].Life);
+			}
+			else {
+				csLife.Empty();
+			}
+
 			// Tooltip
-			cstr.Format(_T("(%d) %s %s [%s] %s\r\n"),
+			cstr.Format(_T("(%d) %s %s [%s%s] %s\r\n"),
 							 	i + 1,	//Disk Number 
 							 	m_Ata.vars[i].Model,	// Model Name
 								csDiskSize,	// Disk Size  
 								diskStatus, // Disk Status
+								csLife,		// Life
 								csTemperature // Temperture
 							);
 			tipFull += cstr;	// Write tip Full String
