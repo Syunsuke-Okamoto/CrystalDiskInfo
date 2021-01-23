@@ -61,3 +61,10 @@
 #*.PDF   diff=astextplain
 #*.rtf   diff=astextplain
 #*.RTF   diff=astextplain
+
+################################################################
+# Crystal Disk Info *.lang files of text attribute is set utf16(le)-bom
+################################################################
+*.lang	text diff working-tree-encoding=UTF-16-BOM eol=CRLF
+*.LANG	text diff working-tree-encoding=UTF-16-BOM eol=CRLF
+ 
