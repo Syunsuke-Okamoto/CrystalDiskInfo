@@ -34,6 +34,8 @@
 #define GRAPH_DIALOG_IE8			_T("Graph8.html")
 #define OPTION_DIALOG				_T("Option.html")
 
+#define CALC_FAHRENHEIT_TEMPERATURE( digree , bFahrenheit ) ( bFahrenheit )? ( (digree * 9 ) / 5 + 32 ) : (digree)  //温度計算 (華氏は * 9 /5 + 32, 摂氏はそのまま )
+
 #ifdef SUISHO_SHIZUKU_SUPPORT
 	#ifdef KUREI_KEI_SUPPORT
 		#define PROJECT_COPYRIGHT   L"KureiKeiCopyright"

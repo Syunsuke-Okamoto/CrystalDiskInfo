@@ -715,7 +715,7 @@ void CDiskInfoDlg::UpdateToolTip()
 	if(m_bResident)
 	{
 		CString cstr;
-		CString tipFull, tipMid, tipShort;
+		CString tipFull, tipMid, tipLowerMid, tipShort;
 		int tipMAXLength = 128; // Tool tip Maximum Length
 
 		int iDiskCount = m_Ata.vars.GetCount();	// Disk Counter 
@@ -728,6 +728,7 @@ void CDiskInfoDlg::UpdateToolTip()
 		{
 			CString diskStatus;
 			CString csTemperature; // Temperature (℉ / ℃)
+			CString csTemperatureUnit;// Temperature Unit (℉ / ℃) or (F / C)
 			CString csDiskSize; // Disk Size + SI Prefix(M, G, T)
 			CString csLife;	// Life 
 
@@ -743,12 +744,13 @@ void CDiskInfoDlg::UpdateToolTip()
 				
 				dwSIvalue = 1;
 
+				// Set Prefix Values
 				for(int k = 0; k < j; k ++)
 					dwSIvalue = dwSIvalue * dwSIUnit;
 
 				if( j > 0 ){	
 					if(m_Ata.vars[i].TotalDiskSize >= dwSIvalue ){
-						csDiskSize.Format(_T("%.1lf %cB"),
+						csDiskSize.Format(_T("%.1f %cB"),
 							(double)(m_Ata.vars[i].TotalDiskSize) / (double)(dwSIvalue),	// Disk Value
 							tcSIprefix[j]	// SI prefix
 						);
@@ -766,10 +768,12 @@ void CDiskInfoDlg::UpdateToolTip()
 			// Temperature Parts
 			if(m_Ata.vars[i].IsSmartEnabled && iTemperature > -300 ){
 				if(m_bFahrenheit){
-					csTemperature.Format(_T("%d ℉"), iTemperature * 9 / 5 + 32);
+					csTemperatureUnit.Format(_T("℉"));
 				}else{
-					csTemperature.Format(_T("%d ℃"), iTemperature);
+					csTemperatureUnit.Format(_T("℃"));
 				}
+				csTemperature.Format(_T("%d %s"), CALC_FAHRENHEIT_TEMPERATURE(iTemperature, m_bFahrenheit), csTemperatureUnit.GetString());
+
 			}else{
 				csTemperature.Empty();
 			}
@@ -785,17 +789,31 @@ void CDiskInfoDlg::UpdateToolTip()
 			// Tooltip
 			cstr.Format(_T("(%d) %s %s [%s%s] %s\r\n"),
 							 	i + 1,	//Disk Number 
-							 	m_Ata.vars[i].Model,	// Model Name
-								csDiskSize,	// Disk Size  
-								diskStatus, // Disk Status
-								csLife,		// Life
-								csTemperature // Temperture
+							 	m_Ata.vars[i].Model.GetString(),	// Model Name
+								csDiskSize.GetString(),	// Disk Size  
+								diskStatus.GetString(), // Disk Status
+								csLife.GetString(),		// Life
+								csTemperature.GetString() // Temperture
 							);
 			tipFull += cstr;	// Write tip Full String
 			
-			cstr.Format(_T("(%d) %s %s\r\n"), i + 1, m_Ata.vars[i].Model, csTemperature);
+			cstr.Format(_T("(%d) %s %s\r\n"),
+				i + 1,
+				m_Ata.vars[i].Model.GetString(),
+				csTemperature.GetString()
+			);
 			tipMid += cstr; // Write tip Middle String
-			cstr.Format(_T("(%d)%s\r\n"), i + 1, csTemperature);
+			cstr.Format(_T("(%d)[%s%s] %s\r\n"),
+				i + 1,
+				diskStatus.GetString(), // Disk Status
+				csLife.GetString(),		// Life
+				csTemperature.GetString()	// Temperture
+			);
+			tipLowerMid += cstr; // Write tip Middle String
+			cstr.Format(_T("(%d)%s\r\n"),
+				i + 1,
+				csTemperature.GetString()
+			);
 			tipShort += cstr; // Write tip Short String
 		}
 
@@ -809,6 +827,9 @@ void CDiskInfoDlg::UpdateToolTip()
 		else if(tipMid.GetLength() < tipMAXLength )
 		{
 			m_StatusTip = tipMid;
+		}
+		else if (tipLowerMid.GetLength() < tipMAXLength) {
+			m_StatusTip = tipLowerMid;
 		}
 		else
 		{
