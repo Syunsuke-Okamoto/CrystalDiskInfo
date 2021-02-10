@@ -1294,7 +1294,7 @@ BOOL CDiskInfoDlg::ChangeDisk(DWORD i)
 	if (m_Ata.vars[i].NandWrites >= 0)
 	{
 		cstr = L"";
-		/*
+
 		if(m_Ata.vars[i].NandWrites > 1024 * 1024)
 		{
 		cstr.Format(_T("%.3f PB"), m_Ata.vars[i].NandWrites / 1024.0 / 1024.0);
@@ -1303,7 +1303,7 @@ BOOL CDiskInfoDlg::ChangeDisk(DWORD i)
 		{
 		cstr.Format(_T("%.3f TB"), m_Ata.vars[i].NandWrites / 1024.0);
 		}
-		*/
+
 		m_RotationRate.Format(_T("%d GB"), m_Ata.vars[i].NandWrites);
 		/*
 		if (m_Ata.vars[i].PlextorNandWritesUnit)
