@@ -718,7 +718,7 @@ void CDiskInfoDlg::UpdateToolTip()
 		CString tipFull, tipMid, tipLowerMid, tipShort;
 		int tipMAXLength = 128; // Tool tip Maximum Length
 
-		int iDiskCount = m_Ata.vars.GetCount();	// Disk Counter 
+		int iDiskCount = (int)m_Ata.vars.GetCount();	// Disk Counter 
 
 		TCHAR tcSIprefix[]={'M', 'G', 'T'}; //SI Prefix(M, G, T)
 		int iSIprefixNumber = 3; // Use SI Prefix Number
